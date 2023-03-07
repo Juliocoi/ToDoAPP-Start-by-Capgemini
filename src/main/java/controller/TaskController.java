@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import model.Task;
@@ -13,7 +12,7 @@ import util.ConnectionFactory;
 public class TaskController {
 
   public void save(Task task) {
-    String sql = "INSERT INTO tasks(idProject "
+    String sql = "INSERT INTO tasks(idProject, "
             + "Name, "
             + "description, "
             + "isCompleted, "
@@ -53,7 +52,7 @@ public class TaskController {
             + "notes = ?, "
             + "deadline = ?, "
             + "createdAt = ?, "
-            + "updatedAt = ?, "
+            + "updatedAt = ? "
             + "WHERE id = ?";
 
     Connection conn = null;
@@ -74,14 +73,14 @@ public class TaskController {
       statement.execute();
 
     } catch (Exception ex) {
-      throw new RuntimeException("Erro ao atualizar tarefa." + ex.getMessage() + ex);
+      throw new RuntimeException("Erro ao atualizar tarefa." + ex.getMessage());
 
     } finally {
       ConnectionFactory.closeConnection(conn, statement);
     }
   }
 
-  public void removeByID(int taskId) throws SQLException {
+  public void removeByID(int taskId) {
     String sql = "DELETE FROM tasks WHERE id = ?";
     Connection conn = null;
     PreparedStatement statement = null;
@@ -125,7 +124,7 @@ public class TaskController {
         task.setNotes(resultSet.getString("notes"));
         task.setDeadLine(resultSet.getDate("deadline"));
         task.setCreatedAt(resultSet.getDate("createdAt"));
-        task.setUpdatedAt(resultSet.getDate("updateAt"));
+        task.setUpdatedAt(resultSet.getDate("updatedAt"));
 
         tasks.add(task);
       }

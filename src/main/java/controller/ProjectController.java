@@ -12,7 +12,7 @@ import util.ConnectionFactory;
 public class ProjectController {
 
   public void Save(Project project) {
-    String sql = "INSERT INTO projects(Name "
+    String sql = "INSERT INTO projects(Name, "
             + "Description, "
             + "CreatedAt, "
             + "UpdatedAt) VALUES(?, ?, ?, ?)";
@@ -27,6 +27,7 @@ public class ProjectController {
       statement.setString(2, project.getDescription());
       statement.setDate(3, new Date(project.getCreatedAt().getTime()));
       statement.setDate(4, new Date(project.getUpdatedAt().getTime()));
+
       statement.execute();
     } catch (Exception ex) {
       throw new RuntimeException("Erro ao salvar projeto. " + ex.getMessage(), ex);
@@ -40,7 +41,7 @@ public class ProjectController {
             + "Name = ?, "
             + "Description = ?, "
             + "CreatedAt = ?, "
-            + "UpdatedAt = ?, "
+            + "UpdatedAt = ? "
             + "WHERE id = ?";
 
     Connection conn = null;
@@ -55,8 +56,8 @@ public class ProjectController {
       statement.setDate(3, new Date(project.getCreatedAt().getTime()));
       statement.setDate(4, new Date(project.getUpdatedAt().getTime()));
       statement.setInt(5, project.getId());
-      statement.execute();
 
+      statement.execute();
     } catch (Exception ex) {
       throw new RuntimeException("Erro ao atualizar projeto. " + ex.getMessage() + ex);
 
@@ -65,19 +66,18 @@ public class ProjectController {
     }
   }
 
-  public List<Project> getALL(int id) {
-    String sql = "SELECT * FROM projects WHERE id = ?";
+  public List<Project> getALL() {
+    String sql = "SELECT * FROM projects";
 
     Connection conn = null;
     PreparedStatement statement = null;
     ResultSet resultSet = null;
 
-    List<Project> projects = new ArrayList<Project>();
+    List<Project> projects = new ArrayList<>();
 
     try {
       conn = ConnectionFactory.getConnection();
       statement = conn.prepareStatement(sql);
-      statement.setInt(1, id);
       resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
@@ -110,6 +110,7 @@ public class ProjectController {
 
       statement = conn.prepareStatement(sql);
       statement.setInt(1, id);
+
       statement.execute();
     } catch (Exception ex) {
       throw new RuntimeException("Erro ao deletar a projeto.", ex);
